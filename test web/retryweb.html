@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Try My Web</title>
+</head>
+<link rel="manifest" href="manifest.json">
+<body>
+    <h1>Try This Webcam</h1>
+    <button id="accessButton">Request Access</button>
+    
+    <video id="video" width="640" height="480" autoplay></video>
+    <div id="snap" style="height: 150px; width: 150px; border-radius: 50%; cursor: pointer; font-family: 
+    'Courier New', Courier, monospace; text-align: center; background-color: gainsboro; margin: 20px; 
+    font-size: 1.5em; line-height: 150px;">Snap</div>
+
+    <canvas id="canvas" width="620" height="460"></canvas>
+
+    <script>
+        const video = document.getElementById('video');
+        const snap = document.getElementById('snap');
+        const canvas = document.getElementById('canvas');
+        const context = canvas.getContext('2d');
+
+        async function initCamera() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                alert("Failed to access camera. Please check your permissions.");
+            }
+        }
+
+        snap.addEventListener("click", () => {
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('accessButton').addEventListener('click', initCamera);
+        
+        if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service Worker Registered"))
+        .catch((error) => console.log("Service Worker Registration Failed:", error));
+}
+
+    </script> 
+</body>
+</html>
